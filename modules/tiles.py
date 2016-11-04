@@ -13,7 +13,7 @@ class MapTile:
 
 class StartingRoom(MapTile):
     def __init__(self, x, y):
-        self.description = "STARTING room baby"
+        self.description = "Looking around you realize this is where you started your journey."
         MapTile.__init__(self, x, y)
 
     def describe(self):
@@ -21,7 +21,7 @@ class StartingRoom(MapTile):
 
 class EmptyCavePath(MapTile):
     def __init__(self, x, y):
-        self.description = "cave path boring"
+        self.description = "An empty cave path. There's nothing to see here and no enemies to kill you."
         MapTile.__init__(self, x, y)
 
     def describe(self):
@@ -30,7 +30,7 @@ class EmptyCavePath(MapTile):
 class LootRoom(MapTile):
     def __init__(self, x, y):
         self.chest = Chest(randint(0,100))
-        self.description = "grab some loot"
+        self.description = "You're in a grand room with a chest at the center. Open it?"
         MapTile.__init__(self, x, y)
 
     def describe(self):
@@ -38,7 +38,7 @@ class LootRoom(MapTile):
 
 class EnemyRoom(MapTile):
     def __init__(self, x, y):
-        self.description = "bad guy room"
+        self.description = "BAD GUY ROOM FUCK HIM"
         #self.enemy = generateEnemy(randint(0,1000))
         MapTile.__init__(self, x, y)
 

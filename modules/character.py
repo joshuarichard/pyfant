@@ -41,8 +41,10 @@ class Character:
         if(item.weight + self.weight_cur <= self.weight_cap):
             self.inventory.append(item)
             self.weight_cur = self.weight_cur + item.weight
+            return True
         else:
             print(item.name + " too heavy to be added to inventory.")
+            return False
 
     def dropItemFromInventory(self, index):
         index = index - 1
@@ -66,15 +68,19 @@ class Character:
 
     def printInventory(self):
         print("-------- Items ---------")
-        print("Bag Capacity: " + str(self.weight_cap) + "  Current Weight: " + str(self.weight_cur))
         print("Equipped: ")
+        print("=========")
         for key, value in self.equipped.iteritems():
             if(hasattr(value, "name")):
-                print(key + " - " + value.name)
+                print(key + " - ")
+                item.printItem()
             else:
                 print(key + " - " + str(value))
         print("Inventory:")
+        print("==========")
+        print("Bag Capacity: " + str(self.weight_cap) + "  Current Weight: " + str(self.weight_cur))
         if(len(self.inventory) == 0):
             print("Nothing in your inventory.")
         for index, item in enumerate(self.inventory):
-            print(str(index + 1) + " - Name: " + item.name + "  Weight: " + str(item.weight) + "  Value: " + str(item.value))
+            print("==")
+            item.printItem()

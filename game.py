@@ -30,12 +30,13 @@ def startup():
     global world
     print("===================================================================")
     print("Welcome to your new great adventure in the land of Pyfant!!!!!!")
+    print("Type in \"clear\" or \"help\" at any time.")
 
     world = getWorld()
 
     while True:
         choice = raw_input("Would you like to start a new game (N) or load an old game? (L) [N/L]? : ")
-        if choice in ["N", "L", "n", "l"]:
+        if choice in ["N", "L", "n", "l", "help", "clear"]:
             break
 
     if(choice == "N" or choice == "n"):
@@ -43,6 +44,9 @@ def startup():
         newGame()
     elif (choice == "L" or choice == "l"):
         loadGame()
+    elif (choice == "clear"):
+        os.system("clear")
+        startup()
 
 def newGame():
     global character
@@ -108,68 +112,75 @@ def prompt():
     print("What would you like to do?")
 
     while True:
-        choice = raw_input("G) Go Somewhere D) Do something L) Look around C) Check Character Q) Save and Quit [C/Q] : ")
-        if choice in ["G", "D", "L", "C", "Q", "g", "d", "l", "c", "q"]:
+        choice = raw_input("G) Go somewhere D) Do something L) Look around C) Check Character Q) Save and quit [C/Q] : ")
+        if choice in ["G", "D", "L", "C", "Q", "g", "d", "l", "c", "q", "help", "clear"]:
             break
 
-    if(choice == "G" or choice == "g"):
+    if (choice == "G" or choice == "g"):
         moveCharacter()
-    elif(choice == "D" or choice == "d"):
+    elif (choice == "D" or choice == "d"):
         doSomething()
-    elif(choice == "L" or choice == "l"):
-        print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
+    elif (choice == "L" or choice == "l"):
+        print("Current room: " + world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
+        world.lookAtAdjacentTiles(character.currentLocation[0], character.currentLocation[1])
         prompt()
-    elif(choice == "C" or choice == "c"):
+    elif (choice == "C" or choice == "c"):
         checkCharacter()
-    elif(choice == "Q" or choice == "q"):
+    elif (choice == "Q" or choice == "q"):
         print("Hold on - saving the game...")
         saveGame()
         print("Game saved.")
         sys.exit()
+    elif (choice == "clear"):
+        os.system("clear")
+        prompt()
 
 def moveCharacter():
     print("===================================================================")
     print("Which direction would you like to travel?")
 
     while True:
-        choice = raw_input("N) North S) South W) West E) East C) Cancel [N/S/W/E/C] : ")
-        if choice in ["N", "S", "W", "E", "C", "n", "s", "w", "e", "c"]:
+        choice = raw_input("U) Up D) Down L) Left R) Right C) Cancel [U/D/L/R/C] : ")
+        if choice in ["U", "D", "L", "R", "C", "u", "d", "l", "r", "c", "help", "clear"]:
             break
 
-    if(choice == "N" or choice == "n"):
-        if(world.canGo(character.currentLocation[0] - 1, character.currentLocation[1])):
+    if (choice == "U" or choice == "u"):
+        if (world.canGo(character.currentLocation[0] - 1, character.currentLocation[1])):
             character.currentLocation[0] = character.currentLocation[0] - 1
             print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
             moveCharacter()
-    elif(choice == "S" or choice == "s"):
-        if(world.canGo(character.currentLocation[0] + 1, character.currentLocation[1])):
+    elif (choice == "D" or choice == "d"):
+        if (world.canGo(character.currentLocation[0] + 1, character.currentLocation[1])):
             character.currentLocation[0] = character.currentLocation[0] + 1
             print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
             moveCharacter()
-    elif(choice == "W" or choice == "w"):
-        if(world.canGo(character.currentLocation[0], character.currentLocation[1] - 1)):
+    elif (choice == "L" or choice == "l"):
+        if (world.canGo(character.currentLocation[0], character.currentLocation[1] - 1)):
             character.currentLocation[1] = character.currentLocation[1] - 1
             print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
             moveCharacter()
-    elif(choice == "E" or choice == "e"):
-        if(world.canGo(character.currentLocation[0], character.currentLocation[1] + 1)):
+    elif (choice == "R" or choice == "r"):
+        if (world.canGo(character.currentLocation[0], character.currentLocation[1] + 1)):
             character.currentLocation[1] = character.currentLocation[1] + 1
             print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
             moveCharacter()
-    elif(choice == "C" or choice == "c"):
+    elif (choice == "C" or choice == "c"):
         prompt()
+    elif (choice == "clear"):
+        os.system("clear")
+        moveCharacter()
 
 def noGo():
     print("It doesn't seem like you can go that way.")
@@ -179,24 +190,47 @@ def doSomething():
     print("What would you like to do?")
 
     while True:
-        choice = raw_input("C) Check for a chest [C] : ")
-        if choice in ["C", "c"]:
+        choice = raw_input("L) Look for a chest C) Cancel [L/C] : ")
+        if choice in ["L", "C", "l", "c", "help", "clear"]:
             break
 
-    if(choice == "C" or choice == "c"):
-        if(hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "chest")):
+    if (choice == "L" or choice == "l"):
+        if (hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "chest")):
             print("You're in luck, there is a chest in the room!")
             print("In the chest: ")
             chest = world.getTile(character.currentLocation[0], character.currentLocation[1]).chest
             for index, item in enumerate(chest.contents):
-                print("======== " + str(index) + " ========")
+                print("======== " + str(index + 1) + " ========")
                 item.printItem()
                 # TODO Can list items but now need to put them in your bag
+            print("Would you like to take any of the items?")
+
+            while True:
+                choice = raw_input("Item Index: [int] (press C to cancel) : ")
+                if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                    break
+
+            if (choice == "C" or choice == "c"):
+                prompt()
+            elif (chest.contents[int(choice) - 1] is not None):
+                result = character.addItemToInventory(chest.contents[int(choice) - 1])
+                if (result is True):
+                    del chest.contents[int(choice) - 1]
+                doSomething()
+            else:
+                print("There is no item in the chest at that index.")
+                doSomething()
+
             prompt()
             # continue process here....
         else:
             print("There's no chest in the room.")
             prompt()
+    elif (choice == "C" or choice == "c"):
+        prompt()
+    elif (choice == "clear"):
+        os.system("clear")
+        doSomething()
 
 def checkCharacter():
     print("===================================================================")
@@ -204,17 +238,20 @@ def checkCharacter():
 
     while True:
         choice = raw_input("I) Inventory L) Levels C) Cancel [I/L/C] : ")
-        if choice in ["I", "L", "C", "i", "l", "c"]:
+        if choice in ["I", "L", "C", "i", "l", "c", "help", "clear"]:
             break
 
-    if(choice == "I" or choice == "i"):
+    if (choice == "I" or choice == "i"):
         character.printInventory()
         prompt()
-    elif(choice == "L" or choice == "l"):
+    elif (choice == "L" or choice == "l"):
         character.printStatus()
         prompt()
-    elif(choice == "C" or choice == "c"):
+    elif (choice == "C" or choice == "c"):
         prompt()
+    elif (choice == "clear"):
+        os.system("clear")
+        checkCharacter()
 
 if __name__ == "__main__":
     startup()
