@@ -10,9 +10,10 @@ def generateItem(level, itemType):
             swordMaterial = "Iron"
 
         swordTypes = {
-            0: ["Shortsword", randint(4,7), .80, .49, .28],
+            0: ["Shortsword", randint(4, 7), .80, .49, .28],
             1: ["Longsword", randint(6, 10), .48, .71, .49],
-            2: ["Greatsword", randint(8, 14), .12, .52, .76]
+            2: ["Greatsword", randint(8, 14), .12, .52, .76],
+            3: ["Dagger", randint(1, 3), .99, .23, .07]
         }
         swordType = swordTypes[randint(0,2)]
 

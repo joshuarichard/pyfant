@@ -15,7 +15,6 @@ from time import sleep
 # monsters (and combat...)
 #   - critical hits (combat...)
 # chest traps
-# eat food to heal
 #   - drink alchohol to get stronger but more vulnerable to critical attacks
 # big city
 #   - buy/sell in big city
@@ -37,7 +36,6 @@ def startup():
             break
 
     if(choice == "N" or choice == "n"):
-        print ("Starting a new game...")
         newGame()
     elif (choice == "L" or choice == "l"):
         loadGame()
@@ -244,8 +242,8 @@ def checkCharacter():
     print("Would you like to check your characters inventory or their levels?")
 
     while True:
-        choice = raw_input("I) Inventory L) Levels E) Equip Item U) Unequip Item C) Cancel [I/L/E/U/C] : ")
-        if choice in ["I", "L", "C", "E", "U", "i", "l", "e", "u", "c", "help", "clear"]:
+        choice = raw_input("I) Inventory L) Levels E) Equip Item U) Unequip Item H) Heal C) Cancel [I/L/E/U/H/C] : ")
+        if choice in ["I", "L", "C", "E", "U", "H", "i", "l", "e", "u", "h", "c", "help", "clear"]:
             break
 
     if (choice == "I" or choice == "i"):
@@ -260,7 +258,7 @@ def checkCharacter():
 
         while True:
             choice = raw_input("Item Index [int] (press C to cancel) : ")
-            if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
                 break
 
         if (choice == "C" or choice == "c"):
@@ -269,15 +267,15 @@ def checkCharacter():
             character.equipItem(int(choice) - 1)
             checkCharacter()
         else:
-            print("There is no item in the chest at that index.")
+            print("There is no item at that index.")
             checkCharacter()
     elif (choice == "U" or choice == "u"):
         character.printInventory()
         print("Which slot would you like to unequip?")
 
         while True:
-            choice = raw_input("Slot [slot] (press C to cancel) : ")
-            if choice in ["sword", "dagger1", "dagger2", "shield", "bow", "arrows"]:
+            choice = raw_input("Slot [sword/dagger/shield/bow/arrows/helmet/torso/leggings/boots] (press C to cancel) : ")
+            if choice in ["sword", "dagger", "shield", "bow", "arrows", "helmet", "torso", "leggings", "boots", "C", "c"]:
                 break
 
         if (choice == "C" or choice == "c"):
@@ -287,6 +285,24 @@ def checkCharacter():
             checkCharacter()
     elif (choice == "C" or choice == "c"):
         prompt()
+    elif (choice == "H" or choice == "h"):
+        character.printInventory()
+        print("Which item would you like to consume?")
+
+        while True:
+            choice = raw_input("Item Index [int] (press C to cancel) : ")
+            if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
+                break
+
+        if (choice == "C" or choice == "c"):
+            prompt()
+        elif (character.inventory[int(choice) - 1] is not None):
+            character.heal(int(choice) - 1)
+            checkCharacter()
+        else:
+            print("There is no item at that index.")
+            checkCharacter()
+
     elif (choice == "clear"):
         os.system("clear")
         checkCharacter()

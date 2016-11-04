@@ -1,5 +1,4 @@
 # class_starting_levels: [resilience, strength, dexterity, accuracy]
-# items: {weight, [piercing, slashing, blunt], value}
 
 #"barbarian": [1, 1, 1, 1],
 #"paladin": [1, 1, 1, 1],
@@ -10,8 +9,8 @@
 
 config = {
     "class_starting_levels": {
-        "fighter": [1, 1, 1, 1, 1],
-        "archer": [1, 1, 1, 1, 1]
+        "fighter": [12, 8, 4, 3],
+        "archer":  [8,  4, 6, 9]
     },
     "CurrentMap": 0
 }

@@ -12,13 +12,20 @@ class Character:
         self.strength = config["class_starting_levels"][char_class][1]
         self.dexterity = config["class_starting_levels"][char_class][2]
         self.accuracy = config["class_starting_levels"][char_class][3]
+        self.maxhp = self.resilience * 12
+        self.hp = self.maxhp
+        self.defence = (self.resilience * .40) + (self.strength * .25) + (self.dexterity * .10)
+        self.armour = 0
         self.equipped = {
             "sword": None,
-            "dagger1": None,
-            "dagger2": None,
+            "dagger": None,
             "shield": None,
             "bow": None,
-            "arrows": None
+            "arrows": None,
+            "helmet": None,
+            "torso": None,
+            "leggings": None,
+            "boots": None
         }
 
     def setLocation(self, location):
@@ -38,7 +45,7 @@ class Character:
         self.weight_cap = bagWeight
 
     def addItemToInventory(self, item):
-        if(item.weight + self.weight_cur <= self.weight_cap):
+        if (item.weight + self.weight_cur <= self.weight_cap):
             self.inventory.append(item)
             self.weight_cur = self.weight_cur + item.weight
             return True
@@ -52,10 +59,62 @@ class Character:
         del self.inventory[index]
 
     def equipItem(self, index):
-        if("sword" in self.inventory[index].name):
-            self.equipped["sword"] = self.inventory[index]
-            self.dropItemFromInventory(index)
-            print(self.equipped["sword"].name + " equipped.")
+        isItem = False
+        try:
+            item = self.inventory[index]
+            isItem = True
+        except:
+            isItem = False
+
+        if (isItem is True):
+            if (self.inventory[index].__class__.__name__ == "Weapon"):
+                if ("sword" in self.inventory[index].name):
+                    if (self.equipped["sword"] is None):
+                        self.equipped["sword"] = self.inventory[index]
+                        self.dropItemFromInventory(index + 1)
+                        print(self.equipped["sword"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+                elif ("Dagger" in self.inventory[index].name):
+                    if (self.equipped["dagger"] is None):
+                        self.equipped["dagger"] = self.inventory[index]
+                        self.dropItemFromInventory(index + 1)
+                        print(self.equipped["dagger"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+            if (self.inventory[index].__class__.__name__ == "Armour"):
+                if ("Helmet" in self.inventory[index].name):
+                    if (self.equipped["helmet"] is None):
+                        self.equipped["helmet"] = self.inventory[index]
+                        self.dropItemFromInventory(index + 1)
+                        print(self.equipped["helmet"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+                if ("Chainmail" in self.inventory[index].name or "Platemail" in self.inventory[index].name):
+                    if (self.equipped["torso"] is None):
+                        self.equipped["torso"] = self.inventory[index]
+                        self.dropItemFromInventory(index + 1)
+                        print(self.equipped["torso"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+                if ("Leggings" in self.inventory[index].name):
+                    if (self.equipped["leggings"] is None):
+                        self.equipped["leggings"] = self.inventory[index]
+                        self.dropItemFromInventory(index + 1)
+                        print(self.equipped["leggings"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+                if ("Boots" in self.inventory[index].name):
+                    if (self.equipped["boots"] is None):
+                        self.equipped["boots"] = self.inventory[index]
+                        self.dropItemFromInventory(index + 1)
+                        print(self.equipped["boots"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+            else:
+                print("You cannot equip that item.")
+        else:
+            print("There is no item at that index.")
 
     def unequipItem(self, slot):
         if (self.addItemToInventory(self.equipped[slot]) is True):
@@ -65,21 +124,36 @@ class Character:
         else:
             print(self.equipped[slot].name + " too heavy to be added to inventory.")
 
+    def heal(self, index):
+        if ("Food" in self.inventory[index].__class__.__name__):
+            if (self.hp + self.inventory[index].healing <= self.maxhp):
+                healing = self.inventory[index].healing
+                self.hp = self.hp + self.inventory[index].healing
+                self.dropItemFromInventory(index)
+                print("Healed " + str(healing) + " hp.")
+            else:
+                difference = self.maxhp - self.hp
+                self.hp = self.maxhp
+                self.dropItemFromInventory(index)
+                print("Healed " + str(difference) + " hp.")
+        else:
+            print("That item is not consumable.")
+
     def printStatus(self):
         print("Character Name: " + self.name)
         print("Character Class: " + self.char_class)
-        print("-------- Levels --------")
+        print("HP: " + str(self.hp))
         print("Resilience: " + str(self.resilience))
         print("Strength: " + str(self.strength))
         print("Dexterity: " + str(self.dexterity))
         print("Accuracy: " + str(self.accuracy))
 
     def printInventory(self):
-        print("-------- Items ---------")
         print("")
         print("Equipped: ")
         print("==========")
         for key, item in self.equipped.iteritems():
+            print("")
             if(hasattr(item, "name")):
                 print(key + " - ")
                 item.printItem()
