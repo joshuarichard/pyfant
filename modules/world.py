@@ -39,11 +39,27 @@ class World:
         adjacentTiles = []
 
         # top row
-        # left, middle, right
-        if (self.canGo(x - 1, y)):
-            adjacentTiles.append([None, self.map[x - 1][y].__class__.__name__, None])
+        topRow = []
+
+        # left
+        if (self.canGo(x - 1, y - 1)):
+            topRow.append(self.map[x - 1][y - 1].__class__.__name__)
         else:
-            adjacentTiles.append([None, None, None])
+            topRow.append(None)
+
+        # middle (current location)
+        if (self.canGo(x - 1, y)):
+            topRow.append(self.map[x - 1][y].__class__.__name__)
+        else:
+            topRow.append(None)
+
+        # right
+        if (self.canGo(x - 1, y + 1)):
+            topRow.append(self.map[x - 1][y + 1].__class__.__name__)
+        else:
+            topRow.append(None)
+
+        adjacentTiles.append(topRow)
 
         # middle row
         middleRow = []
@@ -66,11 +82,43 @@ class World:
         adjacentTiles.append(middleRow)
 
         # bottom row
-        # left, middle, right
-        if (self.canGo(x + 1, y)):
-            adjacentTiles.append([None, self.map[x + 1][y].__class__.__name__, None])
+        bottomRow = []
+
+        # left
+        if (self.canGo(x + 1, y - 1)):
+            bottomRow.append(self.map[x + 1][y - 1].__class__.__name__)
         else:
-            adjacentTiles.append([None, None, None])
+            bottomRow.append(None)
+
+        # middle (current location)
+        if (self.canGo(x + 1, y)):
+            bottomRow.append(self.map[x + 1][y].__class__.__name__)
+        else:
+            bottomRow.append(None)
+
+        # right
+        if (self.canGo(x + 1, y + 1)):
+            bottomRow.append(self.map[x + 1][y + 1].__class__.__name__)
+        else:
+            bottomRow.append(None)
+
+        adjacentTiles.append(bottomRow)
+
+        # get longest string of all the strings and pad the smaller ones
+        longest = 0
+        for row in adjacentTiles:
+            for col in row:
+                if (len(str(col)) > longest):
+                    longest = len(str(col))
+
+        for indexR, row in enumerate(adjacentTiles):
+            for indexC, col in enumerate(row):
+                if (longest > len(str(col))):
+                    difference = longest - len(str(col))
+                    newCol = str(col)
+                    for d in range(difference):
+                        newCol = newCol + " "
+                    adjacentTiles[indexR][indexC] = newCol
 
         for row in adjacentTiles:
             print(str(row))

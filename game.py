@@ -15,8 +15,6 @@ from time import sleep
 # monsters (and combat...)
 #   - critical hits (combat...)
 # chest traps
-# equip item ability
-# unequip item
 # eat food to heal
 #   - drink alchohol to get stronger but more vulnerable to critical attacks
 # big city
@@ -104,6 +102,8 @@ def saveGame():
 
     output.close()
 
+    sys.exit()
+
 def prompt():
     print("===================================================================")
     print("Main Menu:")
@@ -121,6 +121,8 @@ def prompt():
     elif (choice == "L" or choice == "l"):
         print("")
         print("Current room: " + world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
+        print("")
+        print("Around you:")
         world.lookAtAdjacentTiles(character.currentLocation[0], character.currentLocation[1])
         print("")
         prompt()
@@ -201,7 +203,7 @@ def doSomething():
             for index, item in enumerate(chest.contents):
                 print("======== " + str(index + 1) + " ========")
                 item.printItem()
-                # TODO Can list items but now need to put them in your bag
+
             print("Would you like to take any of the items?")
 
             while True:
@@ -209,19 +211,25 @@ def doSomething():
                 if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
                     break
 
+            notThere = True
+            try:
+                item = chest.contents[int(choice) - 1]
+                notThere = False
+            except:
+                notThere = True
+
             if (choice == "C" or choice == "c"):
                 prompt()
-            elif (chest.contents[int(choice) - 1] is not None):
-                result = character.addItemToInventory(chest.contents[int(choice) - 1])
-                if (result is True):
-                    del chest.contents[int(choice) - 1]
-                doSomething()
+            elif (notThere is False):
+                if (chest.contents[int(choice) - 1] is not None):
+                    result = character.addItemToInventory(chest.contents[int(choice) - 1])
+                    if (result is True):
+                        del chest.contents[int(choice) - 1]
+                    doSomething()
             else:
                 print("There is no item in the chest at that index.")
                 doSomething()
 
-            prompt()
-            # continue process here....
         else:
             print("There's no chest in the room.")
             prompt()
