@@ -37,28 +37,43 @@ class World:
         }
 
         adjacentTiles = []
-        if (self.canGo(x - 1, y)):
-            adjacentTiles.append(self.map[x - 1][y])
-        else:
-            adjacentTiles.append(None)
-        if (self.canGo(x + 1, y)):
-            adjacentTiles.append(self.map[x + 1][y])
-        else:
-            adjacentTiles.append(None)
-        if (self.canGo(x, y - 1)):
-            adjacentTiles.append(self.map[x][y - 1])
-        else:
-            adjacentTiles.append(None)
-        if (self.canGo(x, y + 1)):
-            adjacentTiles.append(self.map[x][y + 1])
-        else:
-            adjacentTiles.append(None)
 
-        for index, tile in enumerate(adjacentTiles):
-            if (tile is not None):
-                print(directions[index] + tile.description)
-            else:
-                print(directions[index] + " There is nothing.")
+        # top row
+        # left, middle, right
+        if (self.canGo(x - 1, y)):
+            adjacentTiles.append([None, self.map[x - 1][y].__class__.__name__, None])
+        else:
+            adjacentTiles.append([None, None, None])
+
+        # middle row
+        middleRow = []
+
+        # left
+        if (self.canGo(x, y - 1)):
+            middleRow.append(self.map[x][y - 1].__class__.__name__)
+        else:
+            middleRow.append(None)
+
+        # middle (current location)
+        middleRow.append(self.map[x][y].__class__.__name__)
+
+        # right
+        if (self.canGo(x, y + 1)):
+            middleRow.append(self.map[x][y + 1].__class__.__name__)
+        else:
+            middleRow.append(None)
+
+        adjacentTiles.append(middleRow)
+
+        # bottom row
+        # left, middle, right
+        if (self.canGo(x + 1, y)):
+            adjacentTiles.append([None, self.map[x + 1][y].__class__.__name__, None])
+        else:
+            adjacentTiles.append([None, None, None])
+
+        for row in adjacentTiles:
+            print(str(row))
 
 def getWorld():
     worldList = []

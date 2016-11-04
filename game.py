@@ -15,7 +15,6 @@ from time import sleep
 # monsters (and combat...)
 #   - critical hits (combat...)
 # chest traps
-# put items in bag from chests
 # equip item ability
 # unequip item
 # eat food to heal
@@ -65,7 +64,6 @@ def newGame():
     character = Character(character_name, character_class, world.getStartingRoomLocation())
 
     print("Your new character has been created!")
-    print("You are at location: " + str(character.currentLocation))
     character.printStatus()
     character.printInventory()
     prompt()
@@ -112,7 +110,7 @@ def prompt():
     print("What would you like to do?")
 
     while True:
-        choice = raw_input("G) Go somewhere D) Do something L) Look around C) Check Character Q) Save and quit [C/Q] : ")
+        choice = raw_input("G) Go somewhere D) Do something L) Look around C) Check Character Q) Save and quit [G/D/L/C/Q] : ")
         if choice in ["G", "D", "L", "C", "Q", "g", "d", "l", "c", "q", "help", "clear"]:
             break
 
@@ -121,13 +119,14 @@ def prompt():
     elif (choice == "D" or choice == "d"):
         doSomething()
     elif (choice == "L" or choice == "l"):
+        print("")
         print("Current room: " + world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
         world.lookAtAdjacentTiles(character.currentLocation[0], character.currentLocation[1])
+        print("")
         prompt()
     elif (choice == "C" or choice == "c"):
         checkCharacter()
     elif (choice == "Q" or choice == "q"):
-        print("Hold on - saving the game...")
         saveGame()
         print("Game saved.")
         sys.exit()
@@ -237,16 +236,47 @@ def checkCharacter():
     print("Would you like to check your characters inventory or their levels?")
 
     while True:
-        choice = raw_input("I) Inventory L) Levels C) Cancel [I/L/C] : ")
-        if choice in ["I", "L", "C", "i", "l", "c", "help", "clear"]:
+        choice = raw_input("I) Inventory L) Levels E) Equip Item U) Unequip Item C) Cancel [I/L/E/U/C] : ")
+        if choice in ["I", "L", "C", "E", "U", "i", "l", "e", "u", "c", "help", "clear"]:
             break
 
     if (choice == "I" or choice == "i"):
         character.printInventory()
-        prompt()
+        checkCharacter()
     elif (choice == "L" or choice == "l"):
         character.printStatus()
-        prompt()
+        checkCharacter()
+    elif (choice == "E" or choice == "e"):
+        character.printInventory()
+        print("Which item would you like to equip?")
+
+        while True:
+            choice = raw_input("Item Index [int] (press C to cancel) : ")
+            if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                break
+
+        if (choice == "C" or choice == "c"):
+            prompt()
+        elif (character.inventory[int(choice) - 1] is not None):
+            character.equipItem(int(choice) - 1)
+            checkCharacter()
+        else:
+            print("There is no item in the chest at that index.")
+            checkCharacter()
+    elif (choice == "U" or choice == "u"):
+        character.printInventory()
+        print("Which slot would you like to unequip?")
+
+        while True:
+            choice = raw_input("Slot [slot] (press C to cancel) : ")
+            if choice in ["sword", "dagger1", "dagger2", "shield", "bow", "arrows"]:
+                break
+
+        if (choice == "C" or choice == "c"):
+            prompt()
+        else:
+            character.unequipItem(choice)
+            checkCharacter()
     elif (choice == "C" or choice == "c"):
         prompt()
     elif (choice == "clear"):

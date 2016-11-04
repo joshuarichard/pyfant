@@ -52,10 +52,18 @@ class Character:
         del self.inventory[index]
 
     def equipItem(self, index):
-        index = index - 1
         if("sword" in self.inventory[index].name):
             self.equipped["sword"] = self.inventory[index]
-            self.dropItemFromInventory(index + 1)
+            self.dropItemFromInventory(index)
+            print(self.equipped["sword"].name + " equipped.")
+
+    def unequipItem(self, slot):
+        if (self.addItemToInventory(self.equipped[slot]) is True):
+            dropped = self.equipped[slot]
+            self.equipped[slot] = None
+            print(dropped.name + " unequipped.")
+        else:
+            print(self.equipped[slot].name + " too heavy to be added to inventory.")
 
     def printStatus(self):
         print("Character Name: " + self.name)
@@ -68,19 +76,23 @@ class Character:
 
     def printInventory(self):
         print("-------- Items ---------")
+        print("")
         print("Equipped: ")
-        print("=========")
-        for key, value in self.equipped.iteritems():
-            if(hasattr(value, "name")):
+        print("==========")
+        for key, item in self.equipped.iteritems():
+            if(hasattr(item, "name")):
                 print(key + " - ")
                 item.printItem()
             else:
-                print(key + " - " + str(value))
+                print(key + " - " + str(item))
+        print("==========")
+        print("")
         print("Inventory:")
         print("==========")
         print("Bag Capacity: " + str(self.weight_cap) + "  Current Weight: " + str(self.weight_cur))
         if(len(self.inventory) == 0):
             print("Nothing in your inventory.")
         for index, item in enumerate(self.inventory):
-            print("==")
+            print("======== " + str(index + 1) + " ========")
             item.printItem()
+        print("")
