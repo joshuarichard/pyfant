@@ -15,7 +15,6 @@ from time import sleep
 # monsters (and combat...)
 #   - critical hits (combat...)
 # chest traps
-# fix running off the map
 # put items in bag from chests
 # equip item ability
 # unequip item
@@ -129,7 +128,6 @@ def prompt():
         sys.exit()
 
 def moveCharacter():
-    # TODO NEED TO FIX - GOING OFF THE MAP (catch if off map and say can't go there)
     print("===================================================================")
     print("Which direction would you like to travel?")
 
@@ -164,7 +162,7 @@ def moveCharacter():
             moveCharacter()
     elif(choice == "E" or choice == "e"):
         if(world.canGo(character.currentLocation[0], character.currentLocation[1] + 1)):
-            character.currentLocation[1] = character.currentLocation[1] - 1
+            character.currentLocation[1] = character.currentLocation[1] + 1
             print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
