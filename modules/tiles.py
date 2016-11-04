@@ -29,7 +29,7 @@ class EmptyCavePath(MapTile):
 
 class LootRoom(MapTile):
     def __init__(self, x, y):
-        self.chest = Chest(randint(0,100), "sword")
+        self.chest = Chest(randint(0,100))
         self.description = "grab some loot"
         MapTile.__init__(self, x, y)
 

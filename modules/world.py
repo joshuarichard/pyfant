@@ -21,8 +21,8 @@ class World:
         else:
             return False
 
-    def getTileDescription(self, x, y):
-        return self.map[x][y].description
+    def getTile(self, x, y):
+        return self.map[x][y]
 
 def getWorld():
     worldList = []

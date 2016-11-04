@@ -1,19 +1,17 @@
-from item import Item, Weapon, Food
 from random import randint
 from modules.generate import generateItem
 
 class Chest(object):
-    def __init__(self, level, type):
-        self.contents = []
-
+    def __init__(self, level):
         itemTypes = {
             0: "sword",
             1: "armour",
-            2: "jewelry",
-            3: "food",
-            4: "drink"
-        } # type
+            2: "food",
+            3: "drink"
+        }
 
-        numOfItems = randint(0,4)
+        self.contents = []
+
+        numOfItems = randint(1,4)
         for n in range(0, numOfItems):
-            self.contents.append(generateItem(randint(0, 400), "sword"))
+            self.contents.append(generateItem(randint(0, 400), itemTypes[randint(0,3)]))

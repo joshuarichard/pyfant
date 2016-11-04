@@ -4,10 +4,25 @@ import cPickle as pickle
 from modules.character import Character
 from modules.item import Item, Weapon, Food
 from modules.generate import generateItem
-#from modules.world import world
 from modules.world import getWorld
 from random import randint
 from time import sleep
+
+# TODO bigger picture
+# ===================
+# more Maps
+# more items
+# monsters (and combat...)
+#   - critical hits (combat...)
+# chest traps
+# fix running off the map
+# put items in bag from chests
+# equip item ability
+# unequip item
+# eat food to heal
+#   - drink alchohol to get stronger but more vulnerable to critical attacks
+# big city
+#   - buy/sell in big city
 
 character = None
 world = None
@@ -101,9 +116,9 @@ def prompt():
     if(choice == "G" or choice == "g"):
         moveCharacter()
     elif(choice == "D" or choice == "d"):
-        print("Ok doing something!!!")
+        doSomething()
     elif(choice == "L" or choice == "l"):
-        print(world.getTileDescription(character.currentLocation[0], character.currentLocation[1]))
+        print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
         prompt()
     elif(choice == "C" or choice == "c"):
         checkCharacter()
@@ -114,6 +129,7 @@ def prompt():
         sys.exit()
 
 def moveCharacter():
+    # TODO NEED TO FIX - GOING OFF THE MAP (catch if off map and say can't go there)
     print("===================================================================")
     print("Which direction would you like to travel?")
 
@@ -125,7 +141,7 @@ def moveCharacter():
     if(choice == "N" or choice == "n"):
         if(world.canGo(character.currentLocation[0] - 1, character.currentLocation[1])):
             character.currentLocation[0] = character.currentLocation[0] - 1
-            print(world.getTileDescription(character.currentLocation[0], character.currentLocation[1]))
+            print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
@@ -133,7 +149,7 @@ def moveCharacter():
     elif(choice == "S" or choice == "s"):
         if(world.canGo(character.currentLocation[0] + 1, character.currentLocation[1])):
             character.currentLocation[0] = character.currentLocation[0] + 1
-            print(world.getTileDescription(character.currentLocation[0], character.currentLocation[1]))
+            print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
@@ -141,7 +157,7 @@ def moveCharacter():
     elif(choice == "W" or choice == "w"):
         if(world.canGo(character.currentLocation[0], character.currentLocation[1] - 1)):
             character.currentLocation[1] = character.currentLocation[1] - 1
-            print(world.getTileDescription(character.currentLocation[0], character.currentLocation[1]))
+            print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
@@ -149,7 +165,7 @@ def moveCharacter():
     elif(choice == "E" or choice == "e"):
         if(world.canGo(character.currentLocation[0], character.currentLocation[1] + 1)):
             character.currentLocation[1] = character.currentLocation[1] - 1
-            print(world.getTileDescription(character.currentLocation[0], character.currentLocation[1]))
+            print(world.getTile(character.currentLocation[0], character.currentLocation[1]).description)
             prompt()
         else:
             noGo()
@@ -159,6 +175,30 @@ def moveCharacter():
 
 def noGo():
     print("It doesn't seem like you can go that way.")
+
+def doSomething():
+    print("===================================================================")
+    print("What would you like to do?")
+
+    while True:
+        choice = raw_input("C) Check for a chest [C] : ")
+        if choice in ["C", "c"]:
+            break
+
+    if(choice == "C" or choice == "c"):
+        if(hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "chest")):
+            print("You're in luck, there is a chest in the room!")
+            print("In the chest: ")
+            chest = world.getTile(character.currentLocation[0], character.currentLocation[1]).chest
+            for index, item in enumerate(chest.contents):
+                print("======== " + str(index) + " ========")
+                item.printItem()
+                # TODO Can list items but now need to put them in your bag
+            prompt()
+            # continue process here....
+        else:
+            print("There's no chest in the room.")
+            prompt()
 
 def checkCharacter():
     print("===================================================================")
