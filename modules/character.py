@@ -54,7 +54,7 @@ class Character:
             return False
 
     def dropItemFromInventory(self, index):
-        index = index - 1
+        index = index
         self.weight_cur = self.weight_cur - self.inventory[index].weight
         del self.inventory[index]
 
@@ -71,14 +71,14 @@ class Character:
                 if ("sword" in self.inventory[index].name):
                     if (self.equipped["sword"] is None):
                         self.equipped["sword"] = self.inventory[index]
-                        self.dropItemFromInventory(index + 1)
+                        self.dropItemFromInventory(index)
                         print(self.equipped["sword"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
                 elif ("Dagger" in self.inventory[index].name):
                     if (self.equipped["dagger"] is None):
                         self.equipped["dagger"] = self.inventory[index]
-                        self.dropItemFromInventory(index + 1)
+                        self.dropItemFromInventory(index)
                         print(self.equipped["dagger"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
@@ -86,28 +86,28 @@ class Character:
                 if ("Helmet" in self.inventory[index].name):
                     if (self.equipped["helmet"] is None):
                         self.equipped["helmet"] = self.inventory[index]
-                        self.dropItemFromInventory(index + 1)
+                        self.dropItemFromInventory(index)
                         print(self.equipped["helmet"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
                 if ("Chainmail" in self.inventory[index].name or "Platemail" in self.inventory[index].name):
                     if (self.equipped["torso"] is None):
                         self.equipped["torso"] = self.inventory[index]
-                        self.dropItemFromInventory(index + 1)
+                        self.dropItemFromInventory(index)
                         print(self.equipped["torso"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
                 if ("Leggings" in self.inventory[index].name):
                     if (self.equipped["leggings"] is None):
                         self.equipped["leggings"] = self.inventory[index]
-                        self.dropItemFromInventory(index + 1)
+                        self.dropItemFromInventory(index)
                         print(self.equipped["leggings"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
                 if ("Boots" in self.inventory[index].name):
                     if (self.equipped["boots"] is None):
                         self.equipped["boots"] = self.inventory[index]
-                        self.dropItemFromInventory(index + 1)
+                        self.dropItemFromInventory(index)
                         print(self.equipped["boots"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")

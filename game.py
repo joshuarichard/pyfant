@@ -242,16 +242,21 @@ def checkCharacter():
     print("Would you like to check your characters inventory or their levels?")
 
     while True:
-        choice = raw_input("I) Inventory L) Levels E) Equip Item U) Unequip Item H) Heal C) Cancel [I/L/E/U/H/C] : ")
-        if choice in ["I", "L", "C", "E", "U", "H", "i", "l", "e", "u", "h", "c", "help", "clear"]:
+        choice = raw_input("I) Inventory L) Levels E) Equip Item U) Unequip Item D) Drop Item H) Heal C) Cancel [I/L/E/U/D/H/C] : ")
+        if choice in ["I", "L", "C", "E", "U", "D", "H", "i", "l", "e", "u", "d", "h", "c", "help", "clear"]:
             break
 
+    # List inventory
     if (choice == "I" or choice == "i"):
         character.printInventory()
         checkCharacter()
+
+    # List character levels
     elif (choice == "L" or choice == "l"):
         character.printStatus()
         checkCharacter()
+
+    # Equip item
     elif (choice == "E" or choice == "e"):
         character.printInventory()
         print("Which item would you like to equip?")
@@ -269,6 +274,8 @@ def checkCharacter():
         else:
             print("There is no item at that index.")
             checkCharacter()
+
+    # Unequip item
     elif (choice == "U" or choice == "u"):
         character.printInventory()
         print("Which slot would you like to unequip?")
@@ -283,8 +290,31 @@ def checkCharacter():
         else:
             character.unequipItem(choice)
             checkCharacter()
+
+    # Cancel
     elif (choice == "C" or choice == "c"):
         prompt()
+
+    # Drop item
+    elif (choice == "D" or choice == "d"):
+        character.printInventory()
+        print("Which item would you like to drop?")
+
+        while True:
+            choice = raw_input("Item Index [int] (press C to cancel) : ")
+            if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
+                break
+
+        if (choice == "C" or choice == "c"):
+            prompt()
+        elif (character.inventory[int(choice) - 1] is not None):
+            character.dropItemFromInventory(int(choice) - 1)
+            checkCharacter()
+        else:
+            print("There is no item at that index.")
+            checkCharacter()
+
+    # Heal
     elif (choice == "H" or choice == "h"):
         character.printInventory()
         print("Which item would you like to consume?")
@@ -303,6 +333,7 @@ def checkCharacter():
             print("There is no item at that index.")
             checkCharacter()
 
+    # Clear
     elif (choice == "clear"):
         os.system("clear")
         checkCharacter()
