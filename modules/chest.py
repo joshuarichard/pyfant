@@ -12,6 +12,6 @@ class Chest(object):
 
         self.contents = []
 
-        numOfItems = randint(1,4)
+        numOfItems = randint(10,20)
         for n in range(0, numOfItems):
             self.contents.append(generateItem(randint(0, 400), itemTypes[randint(0,3)]))

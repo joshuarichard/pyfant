@@ -206,7 +206,7 @@ def doSomething():
 
             while True:
                 choice = raw_input("Item Index: [int] (press C to cancel) : ")
-                if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
                     break
 
             notThere = True
@@ -266,9 +266,16 @@ def checkCharacter():
             if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
                 break
 
+        notThere = True
+        try:
+            item = character.inventory[int(choice) - 1]
+            notThere = False
+        except:
+            notThere = True
+
         if (choice == "C" or choice == "c"):
             prompt()
-        elif (character.inventory[int(choice) - 1] is not None):
+        elif (notThere is False):
             character.equipItem(int(choice) - 1)
             checkCharacter()
         else:
@@ -305,11 +312,19 @@ def checkCharacter():
             if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
                 break
 
+        notThere = True
+        try:
+            item = chest.contents[int(choice) - 1]
+            notThere = False
+        except:
+            notThere = True
+
         if (choice == "C" or choice == "c"):
             prompt()
-        elif (character.inventory[int(choice) - 1] is not None):
-            character.dropItemFromInventory(int(choice) - 1)
-            checkCharacter()
+        elif (notThere is False):
+            if (character.inventory[int(choice) - 1] is not None):
+                character.dropItemFromInventory(int(choice) - 1)
+                checkCharacter()
         else:
             print("There is no item at that index.")
             checkCharacter()
