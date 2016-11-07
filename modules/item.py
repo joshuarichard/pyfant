@@ -5,7 +5,8 @@ class Item(object):
         self.value = value
 
     def printItem(self):
-        print("Item: " + self.name + " Value: " + str(self.value) + " Weight: " + str(self.weight))
+        print("| " + self.name)
+        print("| Value: " + str(self.value) + " Weight: " + str(self.weight))
 
 class Weapon(Item):
     def __init__(self, name, weight, value, piercing, slashing, blunt):
@@ -16,8 +17,8 @@ class Weapon(Item):
 
     def printItem(self):
         Item.printItem(self)
-        print("Damage:")
-        print("Piercing: " + str(self.piercing) + " Slashing: " + str(self.slashing) + " Blunt: " + str(self.blunt))
+        #print("| Damage:")
+        print("| Piercing: " + str(self.piercing) + " Slashing: " + str(self.slashing) + " Blunt: " + str(self.blunt))
 
 class Armour(Item):
     def __init__(self, name, weight, value, piercing, slashing, blunt):
@@ -28,8 +29,8 @@ class Armour(Item):
 
     def printItem(self):
         Item.printItem(self)
-        print("Defence:")
-        print("Piercing: " + str(self.piercing) + " Slashing: " + str(self.slashing) + " Blunt: " + str(self.blunt))
+        #print("| Defence:")
+        print("| Piercing: " + str(self.piercing) + " Slashing: " + str(self.slashing) + " Blunt: " + str(self.blunt))
 
 class Food(Item):
     def __init__(self, name, weight, value, healing):
@@ -38,7 +39,7 @@ class Food(Item):
 
     def printItem(self):
         Item.printItem(self)
-        print("Healing: " + str(self.healing))
+        print("| Healing: " + str(self.healing))
 
 class Drink(Item):
     def __init__(self, name, weight, value, healing, drunkLevel):
@@ -48,4 +49,4 @@ class Drink(Item):
 
     def printItem(self):
         Item.printItem(self)
-        print("Healing: " + str(self.healing) + " Drunk: " + str(self.drunkLevel))
+        print("| Healing: " + str(self.healing) + " Drunk: " + str(self.drunkLevel))

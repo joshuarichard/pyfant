@@ -152,33 +152,47 @@ class Character:
             print("That item is not consumable.")
 
     def printStatus(self):
-        print("Character Name: " + self.name)
-        print("Character Class: " + self.char_class)
-        print("HP: " + str(self.hp))
-        print("Resilience: " + str(self.resilience))
-        print("Strength: " + str(self.strength))
-        print("Dexterity: " + str(self.dexterity))
-        print("Accuracy: " + str(self.accuracy))
+        print("")
+        print("| Levels:")
+        print("+------------------------------------------------+")
+        print("| Character Name: " + self.name)
+        print("| Character Class: " + self.char_class)
+        print("| HP: " + str(self.hp) + "/" + str(self.maxhp))
+        print("| Resilience: " + str(self.resilience))
+        print("| Strength: " + str(self.strength))
+        print("| Dexterity: " + str(self.dexterity))
+        print("| Accuracy: " + str(self.accuracy))
+        print("+------------------------------------------------+")
+        print("")
 
     def printInventory(self):
         print("")
-        print("Equipped: ")
-        print("==========")
+        print("| Equipped:")
+        print("+------------------------------------------------+")
+        i = 0 # i used to only print the "======" for all but the first one
         for key, item in self.equipped.iteritems():
-            print("")
             if(hasattr(item, "name")):
-                print(key + " - ")
+                if (i > 0):
+                    print("| ===================")
+                print("| " + str(key).title())
                 item.printItem()
+                #print("| -------------")
             else:
-                print(key + " - " + str(item))
-        print("==========")
+                if (i > 0):
+                    print("| ===================")
+                print("| " + str(key).title())
+                print("| None")
+                #print("| -------------")
+            i = i + 1
+        print("+------------------------------------------------+")
         print("")
-        print("Inventory:")
-        print("==========")
-        print("Bag Capacity: " + str(self.weight_cap) + "  Current Weight: " + str(self.weight_cur))
+        print("| Inventory:")
+        print("+------------------------------------------------+")
+        print("| Bag Capacity: " + str(self.weight_cap) + "  Current Weight: " + str(self.weight_cur))
         if(len(self.inventory) == 0):
-            print("Nothing in your inventory.")
+            print("| Nothing in your inventory.")
         for index, item in enumerate(self.inventory):
-            print("======== " + str(index + 1) + " ========")
+            print("| ======== " + str(index + 1) + " ========")
             item.printItem()
+        print("+------------------------------------------------+")
         print("")

@@ -10,7 +10,7 @@ from time import sleep
 
 # TODO bigger picture
 # ===================
-# more Maps
+# more Maps (bigger maps)
 # more items
 # monsters (and combat...)
 #   - critical hits (combat...)
