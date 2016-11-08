@@ -5,14 +5,16 @@ class Chest(object):
     def __init__(self, level):
         itemTypes = {
             0: "sword",
-            1: "bow",
-            2: "armour",
-            3: "food",
-            4: "drink"
+            1: "dagger",
+            2: "bow",
+            3: "arrows",
+            4: "armour",
+            5: "food",
+            6: "drink"
         }
 
         self.contents = []
 
-        numOfItems = randint(10,20)
+        numOfItems = randint(1, 4)
         for n in range(0, numOfItems):
-            self.contents.append(generateItem(randint(0, 400), itemTypes[randint(0,4)]))
+            self.contents.append(generateItem(randint(120, 800), itemTypes[randint(0,4)]))

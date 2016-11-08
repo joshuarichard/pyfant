@@ -5,7 +5,7 @@ from random import randint
 def generateItem(level, itemType):
     if (itemType == "sword"):
         swordMaterial = ""
-        if (level > 150):
+        if (level > 200):
             swordMaterial = "Steel"
         else:
             swordMaterial = "Iron"
@@ -13,14 +13,33 @@ def generateItem(level, itemType):
         swordTypes = {
             0: ["Shortsword", randint(4, 7), .80, .49, .28],
             1: ["Longsword", randint(6, 10), .48, .71, .49],
-            2: ["Greatsword", randint(8, 14), .12, .52, .76],
-            3: ["Dagger", randint(1, 3), .91, .23, .07]
+            2: ["Greatsword", randint(8, 14), .12, .52, .76]
         }
         swordType = swordTypes[randint(0,2)]
 
         return Weapon(swordMaterial + " " + swordType[0], # name
                swordType[1],                              # weight
-               level * .5,                               # value
+               level * .5,                                # value
+               level * swordType[2],                      # pierce
+               level * swordType[3],                      # slash
+               level * swordType[4]                       # blunt
+        )
+
+    elif (itemType == "dagger"):
+        swordMaterial = ""
+        if (level > 200):
+            swordMaterial = "Steel"
+        else:
+            swordMaterial = "Iron"
+
+        swordTypes = {
+            0: ["Dagger", randint(1, 3), .91, .23, .07]
+        }
+        swordType = swordTypes[0]
+
+        return Weapon(swordMaterial + " " + swordType[0], # name
+               swordType[1],                              # weight
+               level * .5,                                # value
                level * swordType[2],                      # pierce
                level * swordType[3],                      # slash
                level * swordType[4]                       # blunt
@@ -41,23 +60,33 @@ def generateItem(level, itemType):
                       level * bowType[4]
         )
 
+    elif (itemType == "arrows"):
+        return Weapon("Arrows",
+                      1,
+                      level * .5,
+                      level * 1.43,
+                      level * .02,
+                      level * .1
+        )
+
     elif (itemType == "armour"):
         armourMaterial = ""
-        if (level > 200):
+        if (level > 600):
             armourMaterial = "Steel"
-        elif (200 > level and level > 50):
+        elif (400 > level and level > 50):
             armourMaterial = "Iron"
-        elif (50 > level):
+        elif (200 > level):
             armourMaterial = "Leather"
 
         armourType = {
             0: ["Helmet", randint(1, 3), .69, .75, .17],
             1: ["Chainmail", randint(7, 10), .87, .63, .37],
             2: ["Platemail", randint(10, 18), .84, .96, .24],
-            3: ["Leggings", randint(5, 13), .53, .29, .43],
-            4: ["Boots", randint(3, 7), .34, .19, .13]
+            3: ["Gloves", randint(2, 5), .35, .58, .42],
+            4: ["Leggings", randint(5, 13), .53, .29, .43],
+            5: ["Boots", randint(3, 7), .34, .19, .13]
         }
-        armourType = armourType[randint(0,4)]
+        armourType = armourType[randint(0,5)]
 
         return Armour(armourMaterial + " " + armourType[0], # name
                armourType[1],                              # weight
@@ -108,7 +137,7 @@ def generateEnemy(char_level):
     enemy = enemies[randint(0,3)]
 
     if (char_level >= 30):
-        enemyRangeEnd = char_level + 7
+        enemyRangeEnd = char_level + 6
         enemyRangeStart = char_level - 1
     elif (char_level >= 20):
         enemyRangeEnd = char_level + 5
@@ -125,13 +154,13 @@ def generateEnemy(char_level):
 
     enemyLevel = randint(enemyRangeStart, enemyRangeEnd)
 
-    attack = [enemy[1][0] * enemyLevel,   # piercing attack
-              enemy[1][1] * enemyLevel,   # slashing attack
-              enemy[1][2] * enemyLevel]   # blunt attack
+    attack = [enemy[1][0] * (enemyLevel * .2),   # piercing attack
+              enemy[1][1] * (enemyLevel * .2),   # slashing attack
+              enemy[1][2] * (enemyLevel * .2)]   # blunt attack
 
-    defence = [enemy[2][0] * enemyLevel,  # piercing defence
-               enemy[2][1] * enemyLevel,  # slashing defence
-               enemy[2][2] * enemyLevel]  # blunt defence
+    defence = [enemy[2][0] * (enemyLevel * .2),  # piercing defence
+               enemy[2][1] * (enemyLevel * .2),  # slashing defence
+               enemy[2][2] * (enemyLevel * .2)]  # blunt defence
 
     return Enemy(enemy[0],   # name
                  enemyLevel, # level

@@ -312,6 +312,7 @@ def doSomething():
                     if (room.enemies[int(choice) - 1].hp <= 0):
                         print("You killed " + room.enemies[int(choice) - 1].name + "!")
                         del room.enemies[int(choice) - 1]
+                        character.addXP(2)
                         if (not room.enemies):
                             room.killed_all_enemies = True
 
@@ -323,6 +324,7 @@ def doSomething():
                     if (room.enemies[int(choice) - 1].hp <= 0):
                         print("You killed " + room.enemies[int(choice) - 1].name + "!")
                         del room.enemies[int(choice) - 1]
+                        character.addXP(2)
                         if (not room.enemies):
                             room.killed_all_enemies = True
 
@@ -334,6 +336,7 @@ def doSomething():
                     if (room.enemies[int(choice) - 1].hp <= 0):
                         print("You killed " + room.enemies[int(choice) - 1].name + "!")
                         del room.enemies[int(choice) - 1]
+                        character.addXP(2)
                         if (not room.enemies):
                             room.killed_all_enemies = True
 
@@ -428,7 +431,7 @@ def checkCharacter():
 
         notThere = True
         try:
-            item = chest.contents[int(choice) - 1]
+            item = character.inventory[int(choice) - 1]
             notThere = False
         except:
             notThere = True

@@ -1,4 +1,6 @@
 from config import config
+from random import randint
+from modules.generate import generateItem
 
 class Character:
     def __init__(self, name, char_class, startingLocation):
@@ -8,17 +10,20 @@ class Character:
         self.weight_cap = 30
         self.weight_cur = 0
         self.currentLocation = startingLocation
+
         self.resilience = config["class_starting_levels"][char_class][0]
         self.strength = config["class_starting_levels"][char_class][1]
         self.dexterity = config["class_starting_levels"][char_class][2]
         self.accuracy = config["class_starting_levels"][char_class][3]
+
         self.maxhp = self.resilience * 120
         self.hp = self.maxhp
-        self.level = 0
-        self.xp_to_next_level = 100
-        self.xp = 0
-        self.defence = 0
 
+        self.level = 1
+        self.xp = 0
+        self.xp_to_next_level = self.level ** 2 + 1
+
+        self.defence = 0
         self.a_piercing = 0
         self.a_slashing = 0
         self.a_blunt = 0
@@ -26,23 +31,41 @@ class Character:
         self.d_slashing = 0
         self.d_blunt = 0
 
+        sword = None
+        bow = None
+        arrows = None
+
+        if (self.char_class == "fighter"):
+            sword = generateItem(120, "sword")
+            bow = generateItem(80, "bow")
+            arrows = generateItem(75, "arrows")
+        else:
+            sword = generateItem(95, "sword")
+            bow = generateItem(140, "bow")
+            arrows = generateItem(120, "arrows")
+
         self.equipped = {
-            "sword": None,
-            "dagger": None,
+            "sword": sword,
+            "dagger": generateItem(70, "dagger"),
             "shield": None,
-            "bow": None,
-            "arrows": None,
+            "bow": bow,
+            "arrows": arrows,
             "helmet": None,
+            "gloves": None,
             "torso": None,
             "leggings": None,
             "boots": None
         }
 
+        self.addItemToInventory(generateItem(randint(100, 140), "armour"))
+        self.addItemToInventory(generateItem(randint(100, 140), "armour"))
+        self.addItemToInventory(generateItem(randint(100, 140), "armour"))
+
     def addXP(self, xp):
         self.xp = self.xp + xp
 
-        if (self.xp > self.xp_to_next_level):
-            levelUp()
+        if (self.xp >= self.xp_to_next_level):
+            self.levelUp()
 
     def levelUp(self):
         print("You leveled up!")
@@ -60,10 +83,10 @@ class Character:
         elif (skill == "D" or skill == "d"):
             self.dexterity = self.dexterity + 1
         elif (skill == "A" or skill == "a"):
-            self.accuracy == self.accuracy + 1
+            self.accuracy = self.accuracy + 1
 
         self.level = self.level + 1
-        self.xp_to_next_level = self.level ** 2
+        self.xp_to_next_level = self.level ** 2 + 1
         self.maxhp = self.resilience * 120
         self.hp = self.maxhp
 
@@ -80,7 +103,6 @@ class Character:
             return False
 
     def dropItemFromInventory(self, index):
-        index = index
         inIventory = False
         try:
             item = self.inventory[index]
@@ -117,12 +139,26 @@ class Character:
                         print(self.equipped["dagger"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
+                elif ("Arrows" in self.inventory[index].name):
+                    if (self.equipped["arrows"] is None):
+                        self.equipped["arrows"] = self.inventory[index]
+                        self.dropItemFromInventory(index)
+                        print(self.equipped["arrows"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
             elif (self.inventory[index].__class__.__name__ == "Armour"):
                 if ("Helmet" in self.inventory[index].name):
                     if (self.equipped["helmet"] is None):
                         self.equipped["helmet"] = self.inventory[index]
                         self.dropItemFromInventory(index)
                         print(self.equipped["helmet"].name + " equipped.")
+                    else:
+                        print("There is already an item equipped in the slot for that item.")
+                if ("Gloves" in self.inventory[index].name):
+                    if (self.equipped["gloves"] is None):
+                        self.equipped["gloves"] = self.inventory[index]
+                        self.dropItemFromInventory(index)
+                        print(self.equipped["gloves"].name + " equipped.")
                     else:
                         print("There is already an item equipped in the slot for that item.")
                 elif ("Chainmail" in self.inventory[index].name or "Platemail" in self.inventory[index].name):
@@ -163,7 +199,7 @@ class Character:
             print("There is nothing equipped in that slot.")
 
     def heal(self, index):
-        if ("Food" in self.inventory[index].__class__.__name__):
+        if ("Food" in self.inventory[index].__class__.__name__ or "Drink" in self.inventory[index].__class__.__name__ ):
             if (self.hp + self.inventory[index].healing <= self.maxhp):
                 healing = self.inventory[index].healing
                 self.hp = self.hp + self.inventory[index].healing
@@ -180,16 +216,21 @@ class Character:
     def calculate_stats(self, weapon):
         self.defence = (self.resilience * 40) + (self.strength * 25) + (self.dexterity * 10)
         try:
-            self.a_piercing = self.equipped[weapon].piercing + (self.strength * 1.83 + self.dexterity * 1.32)
-            self.a_slashing = self.equipped[weapon].slashing + (self.strength * 2 + self.dexterity * 1.16)
-            self.a_blunt = self.equipped[weapon].blunt + (self.strength * 2 + self.dexterity * 1.07)
+            if (weapon == "bow"):
+                self.a_piercing = self.equipped["arrows"].piercing + self.equipped["bow"].piercing + (self.strength * 2.9 + self.dexterity * 1.9 + self.accuracy * 4.8)
+                self.a_piercing = self.equipped["arrows"].slashing + self.equipped["bow"].slashing
+                self.a_piercing = self.equipped["arrows"].blunt + self.equipped["bow"].blunt + (self.strength * 2.2 + self.dexterity * 1.61 + self.accuracy * 2.17)
+            else:
+                self.a_piercing = self.equipped[weapon].piercing + (self.strength * 2.71 + self.dexterity * 1.98)
+                self.a_slashing = self.equipped[weapon].slashing + (self.strength * 3.4 + self.dexterity * 2.12)
+                self.a_blunt = self.equipped[weapon].blunt + (self.strength * 4.6 + self.dexterity * 2.1)
         except:
             print("You're not holding one of those weapons.")
             self.a_piercing = 0
             self.a_slashing = 0
             self.a_blunt = 0
 
-        armour = ["helmet", "torso", "leggings", "boots"]
+        armour = ["helmet", "torso", "gloves", "leggings", "boots"]
         d_piercing = 0
         d_slashing = 0
         d_blunt = 0
@@ -217,10 +258,12 @@ class Character:
 
     def printStatus(self):
         print("")
-        print("| Levels:")
+        print("| Status:")
         print("+------------------------------------------------+")
         print("| Character Name: " + self.name)
         print("| Character Class: " + self.char_class.title())
+        print("| XP: " + str(self.xp) + "/" + str(self.xp_to_next_level))
+        print("+------------------------------------------------+")
         print("| HP: " + str(self.hp) + "/" + str(self.maxhp))
         print("| Resilience: " + str(self.resilience))
         print("| Strength: " + str(self.strength))
