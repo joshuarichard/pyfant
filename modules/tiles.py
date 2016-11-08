@@ -1,7 +1,6 @@
 from item import Item, Weapon, Food
 from chest import Chest
 from random import randint
-#from enemy import Enemy
 
 class MapTile:
     def __init__(self, x, y):
@@ -11,7 +10,7 @@ class MapTile:
     def describe(self, description):
         print(description)
 
-class StartingRoom(MapTile):
+class Start(MapTile):
     def __init__(self, x, y):
         self.description = "Looking around you realize this is where you started your journey."
         MapTile.__init__(self, x, y)
@@ -19,28 +18,44 @@ class StartingRoom(MapTile):
     def describe(self):
         MapTile.describe(self.description)
 
-class EmptyCavePath(MapTile):
+class Path(MapTile):
     def __init__(self, x, y):
-        self.description = "An empty cave path. There's nothing to see here and no enemies to kill you."
+        self.description = "A dirt path running through a thickly covered forest."
         MapTile.__init__(self, x, y)
 
     def describe(self):
         MapTile.describe(self.description)
 
-class LootRoom(MapTile):
+class BanditLoot(MapTile):
     def __init__(self, x, y):
         self.chest = Chest(randint(0,100))
-        self.description = "You're in a grand room with a chest at the center. Open it?"
+        self.description = "Off to the side of the path there's a chest that some bandits left behind."
         MapTile.__init__(self, x, y)
 
     def describe(self):
         MapTile.describe(self.description)
 
-class EnemyRoom(MapTile):
+class Enemies(MapTile):
     def __init__(self, x, y):
-        self.description = "BAD GUY ROOM FUCK HIM"
-        #self.enemy = generateEnemy(randint(0,1000))
+        self.enemies = []
+        self.killed_all_enemies = False
+        self.description = "Bandits were hiding along the path... stop them from hurting anyone else!"
         MapTile.__init__(self, x, y)
 
     def describe(self):
         MapTile.describe(self.description)
+
+    def addEnemy(self, enemy):
+        self.enemies.append(enemy)
+
+    def printEnemies(self):
+        print("")
+        print("| Enemies:")
+        print("+------------------------------------------------+")
+        for index, enemy in enumerate(self.enemies):
+            print("| ======== " + str(index + 1) + " ========")
+            print("| " + enemy.name + " Level: " + str(enemy.level))
+            print("| " + str(enemy.hp) + "/" + str(enemy.maxhp))
+            print("| Description: " + enemy.description)
+        print("+------------------------------------------------+")
+        print("")

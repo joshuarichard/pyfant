@@ -12,10 +12,20 @@ class Character:
         self.strength = config["class_starting_levels"][char_class][1]
         self.dexterity = config["class_starting_levels"][char_class][2]
         self.accuracy = config["class_starting_levels"][char_class][3]
-        self.maxhp = self.resilience * 12
+        self.maxhp = self.resilience * 120
         self.hp = self.maxhp
-        self.defence = (self.resilience * .40) + (self.strength * .25) + (self.dexterity * .10)
-        self.armour = 0
+        self.level = 0
+        self.xp_to_next_level = 100
+        self.xp = 0
+        self.defence = 0
+
+        self.a_piercing = 0
+        self.a_slashing = 0
+        self.a_blunt = 0
+        self.d_piercing = 0
+        self.d_slashing = 0
+        self.d_blunt = 0
+
         self.equipped = {
             "sword": None,
             "dagger": None,
@@ -28,18 +38,34 @@ class Character:
             "boots": None
         }
 
-    def setLocation(self, location):
-        self.currentLocation = location
+    def addXP(self, xp):
+        self.xp = self.xp + xp
 
-    def levelUp(self, skill):
-        if (skill == "resilience"):
+        if (self.xp > self.xp_to_next_level):
+            levelUp()
+
+    def levelUp(self):
+        print("You leveled up!")
+        print("Which skill would you like to increase?")
+
+        while True:
+            skill = raw_input("R) Resilience S) Strength D) Dexterity A) Accuracy [R/S/D/A] : ")
+            if skill in ["R", "r", "S", "s", "D", "d", "A", "a"]:
+                break
+
+        if (skill == "R" or skill == "r"):
             self.resilience = self.resilience + 1
-        elif (skill == "strength"):
+        elif (skill == "S" or skill == "s"):
             self.strength = self.strength + 1
-        elif (skill == "dexterity"):
+        elif (skill == "D" or skill == "d"):
             self.dexterity = self.dexterity + 1
-        elif (skill == "accuracy"):
+        elif (skill == "A" or skill == "a"):
             self.accuracy == self.accuracy + 1
+
+        self.level = self.level + 1
+        self.xp_to_next_level = self.level ** 2
+        self.maxhp = self.resilience * 120
+        self.hp = self.maxhp
 
     def updateWeight(self, bagWeight):
         self.weight_cap = bagWeight
@@ -151,12 +177,50 @@ class Character:
         else:
             print("That item is not consumable.")
 
+    def calculate_stats(self, weapon):
+        self.defence = (self.resilience * 40) + (self.strength * 25) + (self.dexterity * 10)
+        try:
+            self.a_piercing = self.equipped[weapon].piercing + (self.strength * 1.83 + self.dexterity * 1.32)
+            self.a_slashing = self.equipped[weapon].slashing + (self.strength * 2 + self.dexterity * 1.16)
+            self.a_blunt = self.equipped[weapon].blunt + (self.strength * 2 + self.dexterity * 1.07)
+        except:
+            print("You're not holding one of those weapons.")
+            self.a_piercing = 0
+            self.a_slashing = 0
+            self.a_blunt = 0
+
+        armour = ["helmet", "torso", "leggings", "boots"]
+        d_piercing = 0
+        d_slashing = 0
+        d_blunt = 0
+        for a in armour:
+            if (hasattr(self.equipped[a], "piercing")):
+                d_piercing = d_piercing + self.equipped[a].piercing
+            if (hasattr(self.equipped[a], "slashing")):
+                d_slashing = d_slashing + self.equipped[a].slashing
+            if (hasattr(self.equipped[a], "blunt")):
+                d_blunt = d_blunt + self.equipped[a].blunt
+
+        self.d_piercing = .0009 * (self.defence + d_piercing)
+        self.d_slashing = .0009 * (self.defence + d_slashing)
+        self.d_blunt = .0009 * (self.defence + d_blunt)
+
+    def fight(self, enemy, weapon):
+        self.calculate_stats(weapon)
+        total_damage_to_enemy =  (self.a_piercing  * (1 - enemy.d_piercing)) + (self.a_slashing  * (1 - enemy.d_slashing)) + (self.a_blunt  * (1 - enemy.d_blunt))
+        total_damage_to_player = (enemy.a_piercing * (1 - self.d_piercing))  + (enemy.a_slashing * (1 - self.d_slashing))  + (enemy.a_blunt * (1 - self.d_blunt))
+
+        print("You hit " + enemy.name + " with " + str(total_damage_to_enemy) + " damage.")
+        print("You are hit by " + enemy.name + " for " + str(total_damage_to_player) + " damage.")
+
+        return [total_damage_to_enemy, total_damage_to_player]
+
     def printStatus(self):
         print("")
         print("| Levels:")
         print("+------------------------------------------------+")
         print("| Character Name: " + self.name)
-        print("| Character Class: " + self.char_class)
+        print("| Character Class: " + self.char_class.title())
         print("| HP: " + str(self.hp) + "/" + str(self.maxhp))
         print("| Resilience: " + str(self.resilience))
         print("| Strength: " + str(self.strength))

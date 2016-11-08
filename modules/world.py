@@ -1,5 +1,5 @@
 from resources.maps import Maps
-from tiles import StartingRoom, EmptyCavePath, LootRoom
+from tiles import Start, Path, BanditLoot, Enemies
 from config import config
 
 CurrentMap = config["CurrentMap"]
@@ -12,7 +12,7 @@ class World:
         for indexX, row in enumerate(self.map):
             for indexY, entry in enumerate(row):
                 if (entry is not None):
-                    if (entry.__class__.__name__ == "StartingRoom"):
+                    if (entry.__class__.__name__ == "Start"):
                         return [indexX, indexY]
 
     def canGo(self, goingX, goingY):
@@ -105,6 +105,11 @@ class World:
         adjacentTiles.append(bottomRow)
 
         # get longest string of all the strings and pad the smaller ones
+        for indexR, row in enumerate(adjacentTiles):
+            for indexC, col in enumerate(row):
+                if (col is None):
+                    adjacentTiles[indexR][indexC] = "Forest"
+
         longest = 0
         for row in adjacentTiles:
             for col in row:
@@ -129,12 +134,14 @@ def getWorld():
         rowList = []
         for indexY, entry in enumerate(row):
             if (Maps[CurrentMap][indexX][indexY] is not None):
-                if (Maps[CurrentMap][indexX][indexY] == "StartingRoom"):
-                    rowList.append(StartingRoom(indexX, indexY))
-                elif (Maps[CurrentMap][indexX][indexY] == "EmptyCavePath"):
-                    rowList.append(EmptyCavePath(indexX, indexY))
-                elif (Maps[CurrentMap][indexX][indexY] == "LootRoom"):
-                    rowList.append(LootRoom(indexX, indexY))
+                if (Maps[CurrentMap][indexX][indexY] == "Start"):
+                    rowList.append(Start(indexX, indexY))
+                elif (Maps[CurrentMap][indexX][indexY] == "Path"):
+                    rowList.append(Path(indexX, indexY))
+                elif (Maps[CurrentMap][indexX][indexY] == "BanditLoot"):
+                    rowList.append(BanditLoot(indexX, indexY))
+                elif (Maps[CurrentMap][indexX][indexY] == "Enemies"):
+                    rowList.append(Enemies(indexX, indexY))
             else:
                 rowList.append(None)
         worldList.append(rowList)

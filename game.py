@@ -3,7 +3,7 @@ import os
 import cPickle as pickle
 from modules.character import Character
 from modules.item import Item, Weapon, Food
-from modules.generate import generateItem
+from modules.generate import generateItem, generateEnemy
 from modules.world import getWorld
 from random import randint
 from time import sleep
@@ -189,29 +189,82 @@ def doSomething():
     print("What would you like to do?")
 
     while True:
-        choice = raw_input("L) Look for a chest C) Cancel [L/C] : ")
-        if choice in ["L", "C", "l", "c", "help", "clear"]:
+        choice = raw_input("L) Look for a chest F) Fight an Enemy C) Cancel [L/F/C] : ")
+        if choice in ["L", "C", "F", "l", "c", "f", "help", "clear"]:
             break
 
+    areEnemies = True
+
     if (choice == "L" or choice == "l"):
-        if (hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "chest")):
-            print("You're in luck, there is a chest in the room!")
-            print("In the chest: ")
-            chest = world.getTile(character.currentLocation[0], character.currentLocation[1]).chest
-            for index, item in enumerate(chest.contents):
-                print("======== " + str(index + 1) + " ========")
-                item.printItem()
+        if (hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "enemies")):
+            if (world.getTile(character.currentLocation[0], character.currentLocation[1]).killed_all_enemies is True):
+                room = world.getTile(character.currentLocation[0], character.currentLocation[1])
+                areEnemies = False
+        else:
+            areEnemies = False
 
-            print("Would you like to take any of the items?")
+        if (areEnemies is False):
+            if (hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "chest")):
+                print("You're in luck, there is a chest in the room!")
+                print("In the chest: ")
+                chest = world.getTile(character.currentLocation[0], character.currentLocation[1]).chest
+                for index, item in enumerate(chest.contents):
+                    print("======== " + str(index + 1) + " ========")
+                    item.printItem()
 
+                print("Would you like to take any of the items?")
+
+                while True:
+                    choice = raw_input("Item Index: [int] (press C to cancel) : ")
+                    if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
+                        break
+
+                notThere = True
+                try:
+                    item = chest.contents[int(choice) - 1]
+                    notThere = False
+                except:
+                    notThere = True
+
+                if (choice == "C" or choice == "c"):
+                    prompt()
+                elif (notThere is False):
+                    if (chest.contents[int(choice) - 1] is not None):
+                        result = character.addItemToInventory(chest.contents[int(choice) - 1])
+                        if (result is True):
+                            del chest.contents[int(choice) - 1]
+                        doSomething()
+                else:
+                    print("There is no item in the chest at that index.")
+                    doSomething()
+            else:
+                print("There's no chest in the room.")
+                prompt()
+        else:
+            print("You must clear out the enemies in the room before you look for a chest.")
+            doSomething()
+    elif (choice == "F" or choice == "f"):
+        if (hasattr(world.getTile(character.currentLocation[0], character.currentLocation[1]), "enemies")):
+            room = world.getTile(character.currentLocation[0], character.currentLocation[1])
+
+            if (room.killed_all_enemies is False and not room.enemies):
+                numOfEnemies = randint(1, 1)
+
+                for n in range(0, numOfEnemies):
+                    room.addEnemy(generateEnemy(character.level))
+
+            character.printStatus()
+            room.printEnemies()
+
+            print("Which enemy do you want to attack?")
             while True:
-                choice = raw_input("Item Index: [int] (press C to cancel) : ")
-                if choice in ["C", "c", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]:
+                choice = raw_input("Enemy Index [int] (press C to cancel) : ")
+                if choice in ["C", "c", "1", "2", "3", "4"]:
                     break
 
             notThere = True
             try:
-                item = chest.contents[int(choice) - 1]
+                item = room.enemies[int(choice) - 1]
                 notThere = False
             except:
                 notThere = True
@@ -219,17 +272,51 @@ def doSomething():
             if (choice == "C" or choice == "c"):
                 prompt()
             elif (notThere is False):
-                if (chest.contents[int(choice) - 1] is not None):
-                    result = character.addItemToInventory(chest.contents[int(choice) - 1])
-                    if (result is True):
-                        del chest.contents[int(choice) - 1]
-                    doSomething()
+                while True:
+                    weapon = raw_input("Slot [sword/dagger/bow] (press C to cancel) : ")
+                    if weapon in ["sword", "dagger", "bow", "C", "c"]:
+                        break
+
+                if (weapon == "sword"):
+                    hits = character.fight(room.enemies[int(choice) - 1], "sword")
+                    room.enemies[int(choice) - 1].hp = room.enemies[int(choice) - 1].hp - hits[0]
+                    character.hp = character.hp - hits[1]
+                    checkIfDead()
+                    if (room.enemies[int(choice) - 1].hp <= 0):
+                        print("You killed " + room.enemies[int(choice) - 1].name + "!")
+                        del room.enemies[int(choice) - 1]
+                        if (not room.enemies):
+                            room.killed_all_enemies = True
+
+                elif (weapon == "dagger"):
+                    hits = character.fight(room.enemies[int(choice) - 1], "dagger")
+                    room.enemies[int(choice) - 1].hp = room.enemies[int(choice) - 1].hp - hits[0]
+                    character.hp = character.hp - hits[1]
+                    checkIfDead()
+                    if (room.enemies[int(choice) - 1].hp <= 0):
+                        print("You killed " + room.enemies[int(choice) - 1].name + "!")
+                        del room.enemies[int(choice) - 1]
+                        if (not room.enemies):
+                            room.killed_all_enemies = True
+
+                elif (weapon == "bow"):
+                    hits = character.fight(room.enemies[int(choice) - 1], "bow")
+                    room.enemies[int(choice) - 1].hp = room.enemies[int(choice) - 1].hp - hits[0]
+                    character.hp = character.hp - hits[1]
+                    checkIfDead()
+                    if (room.enemies[int(choice) - 1].hp <= 0):
+                        print("You killed " + room.enemies[int(choice) - 1].name + "!")
+                        del room.enemies[int(choice) - 1]
+                        if (not room.enemies):
+                            room.killed_all_enemies = True
+
+                doSomething()
             else:
-                print("There is no item in the chest at that index.")
+                print("There is no enemy at that index.")
                 doSomething()
 
         else:
-            print("There's no chest in the room.")
+            print("There are no enemies in the room.")
             prompt()
     elif (choice == "C" or choice == "c"):
         prompt()
@@ -352,6 +439,30 @@ def checkCharacter():
     elif (choice == "clear"):
         os.system("clear")
         checkCharacter()
+
+def checkIfDead():
+    if (character.hp <= 0):
+        dead()
+
+def dead():
+    print("You died!")
+    print("Your game will be saved with full health.")
+    print("Everything you were holding has been deleted, and you have nothing equipped.")
+    print("But all your levels are the same. So that's great! You've been resurrected!")
+    character.hp = character.maxhp
+    character.inventory = []
+    character.equipped = {
+        "sword": None,
+        "dagger": None,
+        "shield": None,
+        "bow": None,
+        "arrows": None,
+        "helmet": None,
+        "torso": None,
+        "leggings": None,
+        "boots": None
+    }
+    saveGame()
 
 if __name__ == "__main__":
     startup()
