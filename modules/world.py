@@ -16,6 +16,9 @@ class World:
                         return [indexX, indexY]
 
     def canGo(self, goingX, goingY):
+        if (goingX < 0 or goingY < 0 or goingX > len(self.map[0]) - 1 or goingY > len(self.map) - 1):
+            return False
+
         try:
             if (self.map[goingX][goingY] is not None):
                 return True
@@ -28,33 +31,25 @@ class World:
         return self.map[x][y]
 
     def lookAtAdjacentTiles(self, x, y):
-        # N S W E
-        directions = {
-            0: "Up: ",
-            1: "Down: ",
-            2: "Left: ",
-            3: "Right: "
-        }
-
         adjacentTiles = []
 
         # top row
         topRow = []
 
         # left
-        if (self.canGo(x - 1, y - 1)):
+        if (self.canGo(x - 1, y - 1)): #  and x - 1 >= 0 and y - 1 >= 0
             topRow.append(self.map[x - 1][y - 1].__class__.__name__)
         else:
             topRow.append(None)
 
         # middle (current location)
-        if (self.canGo(x - 1, y)):
+        if (self.canGo(x - 1, y)): # and x - 1 >= 0
             topRow.append(self.map[x - 1][y].__class__.__name__)
         else:
             topRow.append(None)
 
         # right
-        if (self.canGo(x - 1, y + 1)):
+        if (self.canGo(x - 1, y + 1)): # and x - 1 >= 0 and y + 1 <= len(self.map) - 1
             topRow.append(self.map[x - 1][y + 1].__class__.__name__)
         else:
             topRow.append(None)
@@ -65,7 +60,7 @@ class World:
         middleRow = []
 
         # left
-        if (self.canGo(x, y - 1)):
+        if (self.canGo(x, y - 1)): # and y - 1 >= 0
             middleRow.append(self.map[x][y - 1].__class__.__name__)
         else:
             middleRow.append(None)
@@ -74,7 +69,7 @@ class World:
         middleRow.append(self.map[x][y].__class__.__name__)
 
         # right
-        if (self.canGo(x, y + 1)):
+        if (self.canGo(x, y + 1)): # and y + 1 <= len(self.map) - 1
             middleRow.append(self.map[x][y + 1].__class__.__name__)
         else:
             middleRow.append(None)
@@ -85,19 +80,19 @@ class World:
         bottomRow = []
 
         # left
-        if (self.canGo(x + 1, y - 1)):
+        if (self.canGo(x + 1, y - 1)): # and x + 1 <= len(self.map[0]) - 1 and y - 1 >= 0
             bottomRow.append(self.map[x + 1][y - 1].__class__.__name__)
         else:
             bottomRow.append(None)
 
         # middle (current location)
-        if (self.canGo(x + 1, y)):
+        if (self.canGo(x + 1, y)): # and (x + 1 <= len(self.map[0]) - 1)
             bottomRow.append(self.map[x + 1][y].__class__.__name__)
         else:
             bottomRow.append(None)
 
         # right
-        if (self.canGo(x + 1, y + 1)):
+        if (self.canGo(x + 1, y + 1)): # and x + 1 <= len(self.map[0]) - 1 and y + 1 <= len(self.map[0]) - 1
             bottomRow.append(self.map[x + 1][y + 1].__class__.__name__)
         else:
             bottomRow.append(None)

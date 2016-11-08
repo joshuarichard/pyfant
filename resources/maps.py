@@ -12,3 +12,5 @@ Maps = {
         ["Path",       "Path", "Path",    None,         None,   "Path", "Path", "Path", "BanditLoot", None,         None]
     ]
 }
+
+# every row needs to be the same length otherwise could run into problems with World.canGo()

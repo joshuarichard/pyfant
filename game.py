@@ -1,6 +1,7 @@
 import sys
 import os
 import cPickle as pickle
+import getopt
 from modules.character import Character
 from modules.item import Item, Weapon, Food
 from modules.generate import generateItem, generateEnemy
@@ -22,13 +23,35 @@ from time import sleep
 character = None
 world = None
 
+def usage():
+    print("usage: game.py --autoload")
+    sys.exit(2)
+
 def startup():
     global world
+
+    world = getWorld()
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'a:h', ['autoload', 'help'])
+    except getopt.GetoptError as e:
+        usage()
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+        elif opt in ('-a', '--autoload'):
+            print("===================================================================")
+            print("Welcome to your new great adventure in the land of Pyfant!!!!!!")
+            print("Type in \"clear\" or \"help\" at any time.")
+            print("Autoloading character...")
+            loadGame(False)
+        else:
+            usage()
+
     print("===================================================================")
     print("Welcome to your new great adventure in the land of Pyfant!!!!!!")
     print("Type in \"clear\" or \"help\" at any time.")
-
-    world = getWorld()
 
     while True:
         choice = raw_input("Would you like to start a new game (N) or load an old game? (L) [N/L]? : ")
@@ -64,11 +87,15 @@ def newGame():
     character.printInventory()
     prompt()
 
-def loadGame():
+def loadGame(ask):
     global character
-    load_path = raw_input("Where is your game saved? (just press enter to look for a save.pkl file in the current directory, or press C to cancel) : ")
 
-    if(load_path == "C" or load_path == "c"):
+    load_path = ""
+
+    if (ask is True):
+        load_path = raw_input("Where is your game saved? (just press enter to look for a save.pkl file in the current directory, or press C to cancel) : ")
+
+    if(load_path in ("C", "c")):
         startup()
 
     if(load_path == ""):
