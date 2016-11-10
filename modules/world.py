@@ -2,20 +2,20 @@ from resources.maps import Maps
 from tiles import Start, Path, BanditLoot, Enemies
 from config import config
 
-CurrentMap = config["CurrentMap"]
+current_map = config["current_map"]
 
 class World:
     def __init__(self, map):
         self.map = map
 
-    def getStartingRoomLocation(self):
+    def get_starting_room_location(self):
         for indexX, row in enumerate(self.map):
             for indexY, entry in enumerate(row):
                 if (entry is not None):
                     if (entry.__class__.__name__ == "Start"):
                         return [indexX, indexY]
 
-    def canGo(self, goingX, goingY):
+    def can_go(self, goingX, goingY):
         if (goingX < 0 or goingY < 0 or goingX > len(self.map[0]) - 1 or goingY > len(self.map) - 1):
             return False
 
@@ -27,29 +27,29 @@ class World:
         except:
             return False
 
-    def getTile(self, x, y):
+    def get_tile(self, x, y):
         return self.map[x][y]
 
-    def lookAtAdjacentTiles(self, x, y):
+    def look_at_adjacent_tiles(self, x, y):
         adjacentTiles = []
 
         # top row
         topRow = []
 
         # left
-        if (self.canGo(x - 1, y - 1)): #  and x - 1 >= 0 and y - 1 >= 0
+        if (self.can_go(x - 1, y - 1)): #  and x - 1 >= 0 and y - 1 >= 0
             topRow.append(self.map[x - 1][y - 1].__class__.__name__)
         else:
             topRow.append(None)
 
         # middle (current location)
-        if (self.canGo(x - 1, y)): # and x - 1 >= 0
+        if (self.can_go(x - 1, y)): # and x - 1 >= 0
             topRow.append(self.map[x - 1][y].__class__.__name__)
         else:
             topRow.append(None)
 
         # right
-        if (self.canGo(x - 1, y + 1)): # and x - 1 >= 0 and y + 1 <= len(self.map) - 1
+        if (self.can_go(x - 1, y + 1)): # and x - 1 >= 0 and y + 1 <= len(self.map) - 1
             topRow.append(self.map[x - 1][y + 1].__class__.__name__)
         else:
             topRow.append(None)
@@ -60,7 +60,7 @@ class World:
         middleRow = []
 
         # left
-        if (self.canGo(x, y - 1)): # and y - 1 >= 0
+        if (self.can_go(x, y - 1)): # and y - 1 >= 0
             middleRow.append(self.map[x][y - 1].__class__.__name__)
         else:
             middleRow.append(None)
@@ -69,7 +69,7 @@ class World:
         middleRow.append(self.map[x][y].__class__.__name__)
 
         # right
-        if (self.canGo(x, y + 1)): # and y + 1 <= len(self.map) - 1
+        if (self.can_go(x, y + 1)): # and y + 1 <= len(self.map) - 1
             middleRow.append(self.map[x][y + 1].__class__.__name__)
         else:
             middleRow.append(None)
@@ -80,19 +80,19 @@ class World:
         bottomRow = []
 
         # left
-        if (self.canGo(x + 1, y - 1)): # and x + 1 <= len(self.map[0]) - 1 and y - 1 >= 0
+        if (self.can_go(x + 1, y - 1)): # and x + 1 <= len(self.map[0]) - 1 and y - 1 >= 0
             bottomRow.append(self.map[x + 1][y - 1].__class__.__name__)
         else:
             bottomRow.append(None)
 
         # middle (current location)
-        if (self.canGo(x + 1, y)): # and (x + 1 <= len(self.map[0]) - 1)
+        if (self.can_go(x + 1, y)): # and (x + 1 <= len(self.map[0]) - 1)
             bottomRow.append(self.map[x + 1][y].__class__.__name__)
         else:
             bottomRow.append(None)
 
         # right
-        if (self.canGo(x + 1, y + 1)): # and x + 1 <= len(self.map[0]) - 1 and y + 1 <= len(self.map[0]) - 1
+        if (self.can_go(x + 1, y + 1)): # and x + 1 <= len(self.map[0]) - 1 and y + 1 <= len(self.map[0]) - 1
             bottomRow.append(self.map[x + 1][y + 1].__class__.__name__)
         else:
             bottomRow.append(None)
@@ -123,21 +123,21 @@ class World:
         for row in adjacentTiles:
             print(str(row))
 
-def getWorld():
-    worldList = []
-    for indexX, row in enumerate(Maps[CurrentMap]):
-        rowList = []
+def get_world():
+    world_list = []
+    for indexX, row in enumerate(Maps[current_map]):
+        row_list = []
         for indexY, entry in enumerate(row):
-            if (Maps[CurrentMap][indexX][indexY] is not None):
-                if (Maps[CurrentMap][indexX][indexY] == "Start"):
-                    rowList.append(Start(indexX, indexY))
-                elif (Maps[CurrentMap][indexX][indexY] == "Path"):
-                    rowList.append(Path(indexX, indexY))
-                elif (Maps[CurrentMap][indexX][indexY] == "BanditLoot"):
-                    rowList.append(BanditLoot(indexX, indexY))
-                elif (Maps[CurrentMap][indexX][indexY] == "Enemies"):
-                    rowList.append(Enemies(indexX, indexY))
+            if (Maps[current_map][indexX][indexY] is not None):
+                if (Maps[current_map][indexX][indexY] == "Start"):
+                    row_list.append(Start(indexX, indexY))
+                elif (Maps[current_map][indexX][indexY] == "Path"):
+                    row_list.append(Path(indexX, indexY))
+                elif (Maps[current_map][indexX][indexY] == "BanditLoot"):
+                    row_list.append(BanditLoot(indexX, indexY))
+                elif (Maps[current_map][indexX][indexY] == "Enemies"):
+                    row_list.append(Enemies(indexX, indexY))
             else:
-                rowList.append(None)
-        worldList.append(rowList)
-    return World(worldList)
+                row_list.append(None)
+        world_list.append(row_list)
+    return World(world_list)

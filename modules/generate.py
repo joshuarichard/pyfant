@@ -1,66 +1,66 @@
-from item import Item, Weapon, Armour, Food, Drink
-from enemy import Enemy
+from modules.item import Item, Weapon, Armour, Food, Drink
+from modules.enemy import Enemy
 from random import randint
 
-def generateItem(level, itemType):
-    if (itemType == "sword"):
-        swordMaterial = ""
+def generate_item(level, item_type):
+    if (item_type == "sword"):
+        sword_material = ""
         if (level > 200):
-            swordMaterial = "Steel"
+            sword_material = "Steel"
         else:
-            swordMaterial = "Iron"
+            sword_material = "Iron"
 
-        swordTypes = {
+        sword_types = {
             0: ["Shortsword", randint(4, 7), .80, .49, .28],
             1: ["Longsword", randint(6, 10), .48, .71, .49],
             2: ["Greatsword", randint(8, 14), .12, .52, .76]
         }
-        swordType = swordTypes[randint(0,2)]
+        sword_type = sword_types[randint(0,2)]
 
-        return Weapon(swordMaterial + " " + swordType[0], # name
-               swordType[1],                              # weight
+        return Weapon(sword_material + " " + sword_type[0], # name
+               sword_type[1],                              # weight
                level * .5,                                # value
-               level * swordType[2],                      # pierce
-               level * swordType[3],                      # slash
-               level * swordType[4]                       # blunt
+               level * sword_type[2],                      # pierce
+               level * sword_type[3],                      # slash
+               level * sword_type[4]                       # blunt
         )
 
-    elif (itemType == "dagger"):
-        swordMaterial = ""
+    elif (item_type == "dagger"):
+        sword_material = ""
         if (level > 200):
-            swordMaterial = "Steel"
+            sword_material = "Steel"
         else:
-            swordMaterial = "Iron"
+            sword_material = "Iron"
 
-        swordTypes = {
+        sword_types = {
             0: ["Dagger", randint(1, 3), .91, .23, .07]
         }
-        swordType = swordTypes[0]
+        sword_type = sword_types[0]
 
-        return Weapon(swordMaterial + " " + swordType[0], # name
-               swordType[1],                              # weight
+        return Weapon(sword_material + " " + sword_type[0], # name
+               sword_type[1],                              # weight
                level * .5,                                # value
-               level * swordType[2],                      # pierce
-               level * swordType[3],                      # slash
-               level * swordType[4]                       # blunt
+               level * sword_type[2],                      # pierce
+               level * sword_type[3],                      # slash
+               level * sword_type[4]                       # blunt
         )
 
-    elif (itemType == "bow"):
-        bowTypes = {
+    elif (item_type == "bow"):
+        bow_types = {
             0: ["Shortbow", randint(2, 5), .99, .02, .28],
             1: ["Longbow", randint(4, 8), 1.05, .06, .31]
         }
-        bowType = bowTypes[randint(0,1)]
+        bow_type = bow_types[randint(0,1)]
 
-        return Weapon(bowType[0],
-                      bowType[1],
+        return Weapon(bow_type[0],
+                      bow_type[1],
                       level * .5,
-                      level * bowType[2],
-                      level * bowType[3],
-                      level * bowType[4]
+                      level * bow_type[2],
+                      level * bow_type[3],
+                      level * bow_type[4]
         )
 
-    elif (itemType == "arrows"):
+    elif (item_type == "arrows"):
         return Weapon("Arrows",
                       1,
                       level * .5,
@@ -69,16 +69,16 @@ def generateItem(level, itemType):
                       level * .1
         )
 
-    elif (itemType == "armour"):
-        armourMaterial = ""
+    elif (item_type == "armour"):
+        armour_material = ""
         if (level > 600):
-            armourMaterial = "Steel"
+            armour_material = "Steel"
         elif (400 > level and level > 50):
-            armourMaterial = "Iron"
+            armour_material = "Iron"
         elif (200 > level):
-            armourMaterial = "Leather"
+            armour_material = "Leather"
 
-        armourType = {
+        armour_type = {
             0: ["Helmet", randint(1, 3), .69, .75, .17],
             1: ["Chainmail", randint(7, 10), .87, .63, .37],
             2: ["Platemail", randint(10, 18), .84, .96, .24],
@@ -86,48 +86,48 @@ def generateItem(level, itemType):
             4: ["Leggings", randint(5, 13), .53, .29, .43],
             5: ["Boots", randint(3, 7), .34, .19, .13]
         }
-        armourType = armourType[randint(0,5)]
+        armour_type = armour_type[randint(0,5)]
 
-        return Armour(armourMaterial + " " + armourType[0], # name
-               armourType[1],                              # weight
+        return Armour(armour_material + " " + armour_type[0], # name
+               armour_type[1],                              # weight
                level * .50,                                # value
-               level * armourType[2],                      # pierce
-               level * armourType[3],                      # slash
-               level * armourType[4]                       # blunt
+               level * armour_type[2],                      # pierce
+               level * armour_type[3],                      # slash
+               level * armour_type[4]                       # blunt
         )
 
-    elif (itemType == "food"):
-        foodType = {
+    elif (item_type == "food"):
+        food_types = {
             0: ["Bread", 1, 3, 20],
             1: ["Soup", .5, 5, 25],
             2: ["Cheese", .25, 5, 10],
             3: ["Tomato", .2, 1, 3],
             4: ["Lettuce", .3, 2, 5]
         }
-        foodType = foodType[randint(0,4)]
+        food_type = food_types[randint(0,4)]
 
-        return Food(foodType[0],  # name
-               foodType[1],       # weight
-               foodType[2],       # value
-               foodType[3]        # healing
+        return Food(food_type[0],  # name
+               food_type[1],       # weight
+               food_type[2],       # value
+               food_type[3]        # healing
         )
 
-    elif (itemType == "drink"):
-        drinkType = {
+    elif (item_type == "drink"):
+        drink_types = {
             0: ["Beer", 1, 5, 12, 20],
             1: ["Wine", .75, 8, 25, 40],
             2: ["Mead", 1.5, 6, 15, 32]
         }
-        drinkType = drinkType[randint(0,2)]
+        drink_type = drink_types[randint(0,2)]
 
-        return Drink(drinkType[0],  # name
-               drinkType[1],        # weight
-               drinkType[2],        # value
-               drinkType[3],        # healing
-               drinkType[4]         # drunkLevel
+        return Drink(drink_type[0],  # name
+               drink_type[1],        # weight
+               drink_type[2],        # value
+               drink_type[3],        # healing
+               drink_type[4]         # drunkLevel
         )
 
-def generateEnemy(char_level):
+def generate_enemy(char_level):
     enemies = {
         0: ["Bandit Archer",  [.91, .08, .34], [.21, .16, .42], "A bandit archer who fires piercing arrows, while weak to sharp weapons."],
         1: ["Bandit Warrior", [.46, .73, .58], [.32, .27, .59], "Common bandit warrior. Drunk with a powerful swing. It's best to pierce or slash this warrior's armour."],
@@ -137,33 +137,33 @@ def generateEnemy(char_level):
     enemy = enemies[randint(0,3)]
 
     if (char_level >= 30):
-        enemyRangeEnd = char_level + 6
-        enemyRangeStart = char_level - 1
+        enemy_range_end = char_level + 6
+        enemy_range_start = char_level - 1
     elif (char_level >= 20):
-        enemyRangeEnd = char_level + 5
-        enemyRangeStart = char_level - 2
+        enemy_range_end = char_level + 5
+        enemy_range_start = char_level - 2
     elif (char_level >= 10):
-        enemyRangeEnd = char_level + 3
-        enemyRangeStart = char_level - 3
+        enemy_range_end = char_level + 3
+        enemy_range_start = char_level - 3
     elif (char_level >= 5):
-        enemyRangeEnd = char_level + 2
-        enemyRangeStart = char_level - 4
+        enemy_range_end = char_level + 2
+        enemy_range_start = char_level - 4
     else:
-        enemyRangeEnd = char_level + 1
-        enemyRangeStart = 1
+        enemy_range_end = char_level + 1
+        enemy_range_start = 1
 
-    enemyLevel = randint(enemyRangeStart, enemyRangeEnd)
+    enemy_level = randint(enemy_range_start, enemy_range_end)
 
-    attack = [enemy[1][0] * (enemyLevel * .2),   # piercing attack
-              enemy[1][1] * (enemyLevel * .2),   # slashing attack
-              enemy[1][2] * (enemyLevel * .2)]   # blunt attack
+    attack = [enemy[1][0] * (enemy_level * .2),   # piercing attack
+              enemy[1][1] * (enemy_level * .2),   # slashing attack
+              enemy[1][2] * (enemy_level * .2)]   # blunt attack
 
-    defence = [enemy[2][0] * (enemyLevel * .2),  # piercing defence
-               enemy[2][1] * (enemyLevel * .2),  # slashing defence
-               enemy[2][2] * (enemyLevel * .2)]  # blunt defence
+    defence = [enemy[2][0] * (enemy_level * .2),  # piercing defence
+               enemy[2][1] * (enemy_level * .2),  # slashing defence
+               enemy[2][2] * (enemy_level * .2)]  # blunt defence
 
     return Enemy(enemy[0],   # name
-                 enemyLevel, # level
+                 enemy_level, # level
                  attack,     # attack
                  defence,    # defence
                  enemy[3]    # description

@@ -45,10 +45,10 @@ class Enemies(MapTile):
     def describe(self):
         MapTile.describe(self.description)
 
-    def addEnemy(self, enemy):
+    def add_enemy(self, enemy):
         self.enemies.append(enemy)
 
-    def printEnemies(self):
+    def print_enemies(self):
         print("")
         print("| Enemies:")
         print("+------------------------------------------------+")

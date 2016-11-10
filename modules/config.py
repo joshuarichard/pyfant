@@ -12,5 +12,5 @@ config = {
         "fighter": [12, 8, 4, 3],
         "archer":  [8,  4, 6, 9]
     },
-    "CurrentMap": 0
+    "current_map": 0
 }
